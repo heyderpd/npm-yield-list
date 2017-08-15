@@ -1,6 +1,6 @@
 {
   "name": "yield-list",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -8,6 +8,13 @@
     "test": "mocha --compilers js:babel-register --reporter spec 'test/*.spec.js'",
     "build": "npm run transpile && npm run test"
   },
+  "keywords": [
+    "list",
+    "linked",
+    "yield",
+    "iterator",
+    "scoped"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/heyderpd/npm-yield-list.git"
