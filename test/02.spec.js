@@ -42,4 +42,14 @@ describe('list', function() {
       iterator.next().value,
       {a: 1})
   })
+  
+  it('from array', () => {
+    const L = list(items)
+    
+    const arr = L.map()
+
+    assert.deepEqual(
+      arr,
+      items)
+  })
 })

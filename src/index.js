@@ -1,4 +1,4 @@
-import { createObject } from 'pytils'
+import { createObject, isArray } from 'pytils'
 
 const listItem = (state, remove) => {
   return createObject(
@@ -6,7 +6,8 @@ const listItem = (state, remove) => {
   { remove })
 }
 
-export default () => {
+export default Arr => {
+
   const state = {
     lastKeys: 0,
     length: 0,
@@ -14,6 +15,13 @@ export default () => {
     last: {},
     links: {},
     position: 0
+  }
+
+  const createFromArray = Arr => {
+    if (isArray(Arr)) {
+      Arr.map(
+        item => push(item))
+    }
   }
 
   const chainItem = (itemA, itemB) => {
@@ -120,6 +128,8 @@ export default () => {
       last.next = state.last
     }
   }
+
+  createFromArray(Arr)
 
   return {
     push,

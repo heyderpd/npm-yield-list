@@ -11,15 +11,23 @@ Example:
 ```javascript
 import list from 'yield-list'
 
+// create from array
+const Arr = [1, 2, 3]
+const L = list(Arr)
+
+// create using push
 const a = {a: 1}
 const b = {b: 2}
-
 const L = list()
 L.push(a)
 L.push(b)
 
+// maps!
 const arr = L.map() // [{a: 1}, {b: 2}]
 const arr = L.mapReverse() // [{b: 2}, {a: 1}] // No need reverse the array! It's a direct map.
+
+// can make a circular array!
+L.makeCircular()
 
 // return a generator function
 iterator = L.map(
@@ -28,7 +36,4 @@ iterator = L.map(
 
 iterator.next().value // {a: 1}
 iterator.next().value // {b: 2}
-
-// can make a circular array!
-L.makeCircular()
 ```
