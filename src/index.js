@@ -1,20 +1,4 @@
-const objectMap = (obj, fx, def = {}) => Object
-  .keys(obj).reduce(
-    (acc, key) => {
-      const value = obj[key]
-      return ({
-        ...acc,
-        [key]: value(fx)
-      })
-    },
-    def)
-
-const createObject = (state = {}, fxs = {}) => {
-  return objectMap(
-    fxs,
-    () => state,
-    state)
-}
+import { createObject } from 'pytils'
 
 const listItem = (state, remove) => {
   return createObject(
