@@ -12,6 +12,8 @@ const listItem = (obj, key, remove) => {
 export default Arr => {
 
   const state = {
+    isCircular: false,
+    isYield: false,
     lastKeys: 0,
     length: 0,
     first: {},
@@ -80,11 +82,13 @@ export default Arr => {
     state.length += 1
   }
 
-  const mapFrom = (first, next) => (fx = x=>x, circular = false) => {
-    if (circular) {
-      return circularMap(first, next, fx)
-    }
+  const genericMap = (first, next) => (fx = x=>x) => {
+    return state.isYield
+      ? circularMap(first, next, fx)
+      : simpleMap(first, next, fx)
+  }
 
+  const simpleMap = (first, next, fx) => {
     let nextItem = first
     let limit = state.length
     const result = []
