@@ -1,9 +1,12 @@
-import { createObject, isArray } from 'pytils'
+import { scopedObject, isArray } from 'pytils'
 
-const listItem = (state, remove) => {
-  return createObject(
-    state,
-  { remove })
+const listItem = (obj, key, remove) => {
+  return scopedObject({
+      obj,
+      key
+    }, {
+      remove
+    })
 }
 
 export default Arr => {
@@ -63,14 +66,11 @@ export default Arr => {
       state.length -= 1
     }
   }
-  const remove = state => () => removeFromList(state().key)
+
+  const remove = state => () => removeFromList(state.key)
 
   const push = obj => {
-    const item = listItem({
-        obj,
-        key: state.lastKeys
-      },
-      remove)
+    const item = listItem(obj, state.lastKeys, remove)
 
     if (!ifFirstSet(item)) {
       setLast(item)
@@ -85,7 +85,7 @@ export default Arr => {
       return circularMap(first, next, fx)
     }
 
-    let nextItem = first    
+    let nextItem = first
     let limit = state.length
     const result = []
     while (nextItem = next(nextItem)) {
@@ -109,7 +109,7 @@ export default Arr => {
       }
     }
   }
-  
+
   const map = mapFrom(
     state.first,
     i => i.next)
@@ -122,9 +122,9 @@ export default Arr => {
     const first = getFirst()
     const last = getLast()
     if (circular) {
-      chainItem(last, first)            
+      chainItem(last, first)
     } else {
-      first.before = state.first      
+      first.before = state.first
       last.next = state.last
     }
   }
