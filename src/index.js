@@ -1,5 +1,7 @@
 import { scopedObject, isArray } from 'pytils'
 
+import createMap from './map'
+
 const listItem = (obj, key, remove) => {
   return scopedObject({
       obj,
@@ -10,10 +12,9 @@ const listItem = (obj, key, remove) => {
 }
 
 export default Arr => {
+  const yieldList = {}
 
   const state = {
-    isCircular: false,
-    isYield: false,
     lastKeys: 0,
     length: 0,
     first: {},
@@ -72,7 +73,9 @@ export default Arr => {
   const remove = state => () => removeFromList(state.key)
 
   const push = obj => {
-    const item = listItem(obj, state.lastKeys, remove)
+    const key = state.lastKeys
+    const item = listItem(obj, key, remove)
+    state.links[key] = item
 
     if (!ifFirstSet(item)) {
       setLast(item)
@@ -80,47 +83,9 @@ export default Arr => {
 
     state.lastKeys += 1
     state.length += 1
+
+    return yieldList
   }
-
-  const genericMap = (first, next) => (fx = x=>x) => {
-    return state.isYield
-      ? circularMap(first, next, fx)
-      : simpleMap(first, next, fx)
-  }
-
-  const simpleMap = (first, next, fx) => {
-    let nextItem = first
-    let limit = state.length
-    const result = []
-    while (nextItem = next(nextItem)) {
-      if (limit-- < 0) {
-        throw 'infinit map! this is a Circular!'
-      }
-
-      const { obj } = nextItem
-      if (obj) {
-        result.push(fx(obj))
-      }
-    }
-    return result
-  }
-
-  const circularMap = function* (nextItem, next, fx) {
-    while (nextItem = next(nextItem)) {
-      const { obj } = nextItem
-      if (obj) {
-        yield fx(obj)
-      }
-    }
-  }
-
-  const map = mapFrom(
-    state.first,
-    i => i.next)
-
-  const mapReverse = mapFrom(
-    state.last,
-    i => i.before)
 
   const makeCircular = circular => {
     const first = getFirst()
@@ -134,12 +99,9 @@ export default Arr => {
   }
 
   createFromArray(Arr)
+  yieldList.push = push
+  yieldList.map = createMap(makeCircular, state)
+  yieldList.state = state // remove in future
 
-  return {
-    push,
-    map,
-    mapReverse,
-    makeCircular,
-    state
-  }
+  return yieldList
 }

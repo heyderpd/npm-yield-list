@@ -1,6 +1,6 @@
 import assert from 'assert'
 
-import list from '../dist'
+import yieldList from '../dist'
 
 const items = [
   { a: 1 },
@@ -8,29 +8,52 @@ const items = [
   { c: 3 },
 ]
 
-describe('list', function() {
+const itemsRev = [
+  { c: 3 },
+  { b: 2 },
+  { a: 1 },
+]
+
+describe('list /dist', function() {
   it('push', () => {
-    const L = list()
-    L.push(items[0])
-    L.push(items[1])
-    L.push(items[2])
-    
-    const arr = L.map()
+    const list = yieldList()
+
+    list
+      .push(items[0])
+      .push(items[1])
+      .push(items[2])
+
+    const arr = list.map()
 
     assert.deepEqual(
       arr,
       items)
   })
 
-  it('circular', () => {
-    const L = list()
-    L.push(items[0])
-    L.push(items[1])
-    L.makeCircular(true)
-    
-    const iterator = L.map(
-      x=> x,
-      true)
+  it('from array', () => {
+    const list = yieldList(items)
+
+    const arr = list.map()
+
+    assert.deepEqual(
+      arr,
+      items)
+  })
+
+  it('reverse', () => {
+    const list = yieldList(items)
+
+    const arr = list.map.reverse()
+
+    assert.deepEqual(
+      arr,
+      itemsRev)
+  })
+
+  it('yield', () => {
+    const list = yieldList(items)
+
+    const iterator = list.map.yield()
 
     assert.deepEqual(
       iterator.next().value,
@@ -40,16 +63,44 @@ describe('list', function() {
       {b: 2})
     assert.deepEqual(
       iterator.next().value,
-      {a: 1})
+      {c: 3})
   })
-  
-  it('from array', () => {
-    const L = list(items)
-    
-    const arr = L.map()
+
+  it('yield reverse', () => {
+    const list = yieldList(items)
+
+    const iterator = list.map.yield.reverse()
 
     assert.deepEqual(
-      arr,
-      items)
+      iterator.next().value,
+      {c: 3})
+    assert.deepEqual(
+      iterator.next().value,
+      {b: 2})
+    assert.deepEqual(
+      iterator.next().value,
+      {a: 1})
+  })
+
+  it('yield reverse circular', () => {
+    const list = yieldList(items)
+
+    const iterator = list.map.yield.circular.reverse()
+
+    assert.deepEqual(
+      iterator.next().value,
+      {c: 3})
+    assert.deepEqual(
+      iterator.next().value,
+      {b: 2})
+    assert.deepEqual(
+      iterator.next().value,
+      {a: 1})
+    assert.deepEqual(
+      iterator.next().value,
+      {c: 3})
+    assert.deepEqual(
+      iterator.next().value,
+      {b: 2})
   })
 })

@@ -9,31 +9,37 @@ Contact me by [github:heyderpd](https://github.com/heyderpd). I'll be glad to he
 
 Example:
 ```javascript
-import list from 'yield-list'
+import yieldList from 'yield-list'
 
 // create from array
 const Arr = [1, 2, 3]
-const L = list(Arr)
+const list = yieldList(Arr)
 
 // create using push
 const a = {a: 1}
 const b = {b: 2}
-const L = list()
-L.push(a)
-L.push(b)
+const c = {c: 2}
+const list = yieldList()
+list
+  .push(a)
+  .push(b)
+  .push(c)
 
 // maps!
-const arr = L.map() // [{a: 1}, {b: 2}]
-const arr = L.mapReverse() // [{b: 2}, {a: 1}] // No need reverse the array! It's a direct map.
-
-// can make a circular array!
-L.makeCircular()
+// [{a: 1}, {b: 2}, {c: 3}]
+const arr = list.map()
+// [{c: 3}, {b: 2}, {a: 1}] // No need reverse the array! It's a direct map.
+const arr = list.map.reverse()
 
 // return a generator function
-iterator = L.map(
-  x=> x, // function will apply by item
-  true) // do a map useind 'yield' by item
+// function will apply by item
+// do a map useind 'yield' by item
+iterator = list.map.yield()
 
 iterator.next().value // {a: 1}
 iterator.next().value // {b: 2}
+iterator.next().value // {c: 3}
+
+// can make a circular array!
+iterator = list.map.yield.circular()
 ```
